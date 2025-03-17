@@ -1,0 +1,27 @@
+<template>
+    <lightning-card title="Create Inspection">
+        <div class="slds-m-around_medium">
+            <lightning-record-edit-form object-api-name="Handover_Inspection__c">
+                <lightning-input-field field-name="Priority__c"></lightning-input-field>
+                <lightning-input-field field-name="Status__c"></lightning-input-field>
+                <lightning-input-field field-name="initiated_by__c"></lightning-input-field>
+                <lightning-input-field field-name="Due_Date__c"></lightning-input-field>
+                <lightning-input-field field-name="Comment__c"></lightning-input-field>
+            </lightning-record-edit-form>
+        </div>
+
+
+
+        <div class="slds-m-around_medium">
+           <lightning-input type="file" 
+            accept=".xlsx, .xls, .csv, .png, .doc, .docx, .pdf"
+            label="Attachment" onchange={openfileUpload}></lightning-input>
+        </div>
+         <template if:true={fileData}>
+            <p>{fileData.filename}</p>
+        </template>
+        <div class="slds-m-around_medium">
+            <lightning-button variant="brand" label="Save" onclick={handleClick}></lightning-button>
+        </div>
+    </lightning-card>
+</template>
