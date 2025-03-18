@@ -17,26 +17,6 @@ public class TokenManager {
 		system.debug(encryptedCode);
         return encryptedCode;
     }
- /*
-   @AuraEnabled
-    public static DateTime decryptAccessCode(String encryptedCode) {
-        String decryptedCode = CryptoUtil.decrypt(encryptedCode);
-        // Convert milliseconds back to DateTime
-        return DateTime.newInstance(Long.valueOf(decryptedCode));
-
-    }
-
-	@AuraEnabled(cacheable=true)
-    public static Boolean isSessionValid(String encryptedCode) {
-        try {
-            DateTime expirationTime = decryptAccessCode(encryptedCode);
-			system.debug(System.now() < expirationTime);
-            return System.now() < expirationTime;
-        } catch(Exception e) {
-            return false;
-        }
-    }
-*/
     
     @AuraEnabled
     public static Map<String, Object> checkSession(String encryptedCode) {

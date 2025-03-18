@@ -1,27 +1,80 @@
+<!-- simple record edit page 
+1.O submit save the following records and generate the record id -->
+
+
+
+
 <template>
-    <lightning-card title="Create Inspection">
-        <div class="slds-m-around_medium">
-            <lightning-record-edit-form object-api-name="Handover_Inspection__c">
-                <lightning-input-field field-name="Priority__c"></lightning-input-field>
-                <lightning-input-field field-name="Status__c"></lightning-input-field>
-                <lightning-input-field field-name="initiated_by__c"></lightning-input-field>
-                <lightning-input-field field-name="Due_Date__c"></lightning-input-field>
-                <lightning-input-field field-name="Comment__c"></lightning-input-field>
-            </lightning-record-edit-form>
+    <lightning-card>
+    <template if:true={sessionIsValid}> 
+        <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
+            <lightning-layout multiple-rows="true">
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="custom-box slds-box slds-p-around_medium">
+                        <lightning-record-edit-form object-api-name="Handover_Inspection__c" onsuccess={handleSuccess}>
+                            <u><b><h1>Create Handover Inspection Form</h1></b></u>
+                            <lightning-input-field field-name="Priority__c" required></lightning-input-field>
+                            <lightning-input-field field-name="Status__c" required></lightning-input-field>
+                            <lightning-input-field field-name="Due_Date__c" required></lightning-input-field>
+                            <lightning-input-field field-name="initiated_by__c"></lightning-input-field>
+                            <lightning-input-field field-name="Comment__c" required></lightning-input-field>
+                        </lightning-record-edit-form>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
         </div>
-
-
-
-        <div class="slds-m-around_medium">
-           <lightning-input type="file" 
-            accept=".xlsx, .xls, .csv, .png, .doc, .docx, .pdf"
-            label="Attachment" onchange={openfileUpload}></lightning-input>
+    
+    <!-- Attachment Component
+    used Lightning layout for making it responsive web design -->        
+    
+        <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <div class="custom-box slds-box slds-p-around_medium">
+                    <template for:each={itemList} for:item="item">
+                        <div key={item.id} class="attachment-row slds-m-around_medium">
+                            <div class="input-button-row">
+                                <lightning-input type="file" accept=".png,.jpeg" label="Attachment" onchange={openfileUpload} data-id={item.id} required></lightning-input>
+                                <div class="button-group">
+                                    <template if:true={item.isLast}>
+                                        <lightning-button-icon icon-name="utility:add" alternative-text="Add Row" onclick={addRow} class="slds-m-left_x-small"></lightning-button-icon>
+                                    </template>
+                                    <template if:true={item.isNotFirst}>
+                                        <lightning-button-icon icon-name="utility:delete" alternative-text="Delete Row" onclick={removeRow} data-id={item.id} class="slds-m-left_x-small"></lightning-button-icon>
+                                    </template>
+                                </div>
+                            </div>
+                            <template if:true={item.fileData}>
+                                <div class="filename">{item.fileData.fileName}</div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </lightning-layout-item>
         </div>
-         <template if:true={fileData}>
-            <p>{fileData.filename}</p>
-        </template>
+    
         <div class="slds-m-around_medium">
-            <lightning-button variant="brand" label="Save" onclick={handleClick}></lightning-button>
+            <lightning-button variant="brand" label="Save" onclick={handleSave}></lightning-button>
         </div>
+    
+    <!-- Here we are rendering time remaining -->
+    
+        <div class="slds-m-around_medium">
+            <p>Session expiring in: {formattedRemainingTime}</p>
+        </div>
+    </template>
+    
+    <template if:false={sessionIsValid}>
+    <div class="error-container">
+        <lightning-card class="error-card">
+            <div class="error-content">
+                <h1>Session Expired</h1>
+                <p>Please contact your administrator.</p>
+            </div>
+        </lightning-card>
+    </div>
+    </template>
+    
+    
+    
     </lightning-card>
-</template>
+    </template>
